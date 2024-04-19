@@ -200,7 +200,7 @@ func (s *SDRTask) TypeDetails() harmonytask.TaskTypeDetails {
 	res := harmonytask.TaskTypeDetails{
 		Max:  s.max,
 		Name: "SDR",
-		Cost: resources.Resources{ // todo offset for prefetch?
+		Cost: resources.Resources{
 			Cpu:     4, // todo multicore sdr
 			Gpu:     0,
 			Ram:     54 << 30,
