@@ -304,11 +304,12 @@ func (ei *EventIndex) migrateToVersion3(ctx context.Context) error {
 	}
 	defer func() { _ = tx.Rollback() }()
 
-	// create index on event.emitter_addr.
-	_, err = tx.ExecContext(ctx, "CREATE INDEX IF NOT EXISTS event_emitter_addr ON event (emitter_addr)")
-	if err != nil {
-		return xerrors.Errorf("create index event_emitter_addr: %w", err)
-	}
+	// The original work on schema v3 included an index on, then, emitter_addr.
+	// Successive work to index events by emitter actor ID instead required the index on the column
+	// to be recreated on a new column called emitter. Therefore, the index creation is done as part of
+	// migrateToVersion4.
+	//
+	// For further context, see: https://github.com/filecoin-project/lotus/pull/11723#discussion_r1526295815
 
 	// create index on event_entry.key index.
 	_, err = tx.ExecContext(ctx, createIndexEventEntryKey)
@@ -684,7 +685,7 @@ func (ei *EventIndex) CollectEvents(ctx context.Context, te *TipSetEvents, rever
 }
 
 // prefillFilter fills a filter's collection of events from the historic index.
-func (ei *EventIndex) prefillFilter(ctx context.Context, f *eventFilter, excludeReverted bool) error {
+func (ei *EventIndex) prefillFilter(ctx context.Context, f *eventFilter) error {
 	var (
 		clauses, joins []string
 		values         []any
@@ -720,14 +721,12 @@ func (ei *EventIndex) prefillFilter(ctx context.Context, f *eventFilter, exclude
 			values = append(values, emitter)
 		}
 		clauses = append(clauses, "("+strings.Join(subclauses, " OR ")+")")
-		// Explicitly exclude reverted events, since at least one emitter is present and reverts cannot be considered.
-		excludeReverted = true
 	}
 
-	if excludeReverted {
-		clauses = append(clauses, "event.reverted=?")
-		values = append(values, false)
-	}
+	// Always exclude reverted events when prefilling. See:
+	// - https://github.com/filecoin-project/lotus/issues/11770
+	clauses = append(clauses, "event.reverted=?")
+	values = append(values, false)
 
 	if len(f.keysWithCodec) > 0 {
 		join := 0
