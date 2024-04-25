@@ -42,6 +42,8 @@ import (
 	"github.com/filecoin-project/lotus/journal"
 	"github.com/filecoin-project/lotus/metrics"
 	"github.com/filecoin-project/lotus/node/modules/dtypes"
+
+	chihuautil "github.com/filecoin-project/lotus/lib/chihua/util" //chihua add
 )
 
 var log = logging.Logger("messagepool")
@@ -1666,3 +1668,126 @@ type MpoolNonceAPI interface {
 	GetNonce(context.Context, address.Address, types.TipSetKey) (uint64, error)
 	GetActor(context.Context, address.Address, types.TipSetKey) (*types.Actor, error)
 }
+
+/*ipfsunion begin*/
+func (mp *MessagePool) AddPendingPriAddr(forcePriPacking bool, isOnlyWhiteList bool, flag uint8, addrs []address.Address) error { //flag==0 none, flag==1 IsOnlyWhiteList, flag == 2 forcePriPacking, flag = 3 both
+	if len(addrs) > 0 {
+		if len(mp.cfg.PriorityAddrs) != 0 {
+			for _, priAddr := range mp.cfg.PriorityAddrs {
+				for _, addr := range addrs {
+					if addr.String() != priAddr.String() {
+						mp.cfg.PriorityAddrs = append(mp.cfg.PriorityAddrs, addr)
+					}
+				}
+			}
+		} else {
+			mp.cfg.PriorityAddrs = append(mp.cfg.PriorityAddrs, addrs...)
+		}
+	}
+
+	if flag&0x01 == 0x01 {
+		mp.cfg.IsOnlyWhiteList = isOnlyWhiteList
+	}
+
+	if flag&0x10 == 0x10 {
+		mp.cfg.ForcePriPacking = forcePriPacking
+	}
+
+	return nil
+}
+
+func (mp *MessagePool) SetGasFeeGap(ctx context.Context, maxFeeCap int64, feeCapOverRadio float64) error {
+	curMaxFeeCap := int64(0)
+	if !mp.cfg.MaxFeeCap.Nil() {
+		curMaxFeeCap = mp.cfg.MaxFeeCap.Int64()
+	}
+
+	if maxFeeCap != curMaxFeeCap && maxFeeCap != 0 {
+		mp.cfg.MaxFeeCap = abi.NewTokenAmount(maxFeeCap)
+	}
+
+	if !chihuautil.IsEqual(feeCapOverRadio, 0.00) && !chihuautil.IsEqual(feeCapOverRadio, mp.cfg.FeeCapOverRatio) {
+		mp.cfg.FeeCapOverRatio = feeCapOverRadio
+	}
+
+	return mp.SetConfig(ctx, mp.cfg)
+}
+
+func (mp *MessagePool) SetGasLimit(ctx context.Context, gasLimitWhiteList bool, gasLimitRadio float64) error {
+	if gasLimitWhiteList != mp.cfg.GasLimitWhiteList {
+		mp.cfg.GasLimitWhiteList = gasLimitWhiteList
+	}
+	if gasLimitRadio >= 0.0 && !chihuautil.IsEqual(gasLimitRadio, mp.cfg.GasLimitRatio) {
+		mp.cfg.GasLimitRatio = gasLimitRadio
+	}
+
+	return mp.SetConfig(ctx, mp.cfg)
+}
+
+func (mp *MessagePool) GetGasLimit() (bool, float64) {
+	return mp.cfg.GasLimitWhiteList, mp.cfg.GasLimitRatio
+}
+
+func (mp *MessagePool) GetGasFeeGap() (int64, float64, error) {
+	var err error
+
+	if mp.cfg.MaxFeeCap.Nil() {
+		err = errors.New("nil MaxFeeCap from cfg")
+	}
+	if err == nil {
+		return mp.cfg.MaxFeeCap.Int64(), mp.cfg.FeeCapOverRatio, err
+	} else {
+		return 0, mp.cfg.FeeCapOverRatio, err
+	}
+}
+
+func (mp *MessagePool) SetGasLimitOverestimation(ctx context.Context, param map[string]float64) error {
+	if param == nil || len(param) == 0 {
+		return nil
+	}
+	for k, v := range param {
+		if k == types.GasLimitOverestimation {
+			if !chihuautil.IsEqual(v, mp.cfg.GasLimitOverestimation) {
+				mp.cfg.GasLimitOverestimation = v
+			}
+		} else if k == types.GasLimitOverestimationPre {
+			if !chihuautil.IsEqual(v, mp.cfg.GasLimitOverestimationPre) {
+				mp.cfg.GasLimitOverestimationPre = v
+			}
+		} else if k == types.GasLimitOverestimationPro {
+			if !chihuautil.IsEqual(v, mp.cfg.GasLimitOverestimationPro) {
+				mp.cfg.GasLimitOverestimationPro = v
+			}
+		}
+	}
+	// save to data-store for loadConfig loading new when restart
+	return mp.SetConfig(ctx, mp.cfg)
+}
+
+func (mp *MessagePool) GetGasLimitOverestimation() (map[string]float64, error) {
+	return map[string]float64{
+		types.GasLimitOverestimation:    mp.cfg.GasLimitOverestimation,
+		types.GasLimitOverestimationPre: mp.cfg.GasLimitOverestimationPre,
+		types.GasLimitOverestimationPro: mp.cfg.GasLimitOverestimationPro,
+	}, nil
+}
+
+func (mp *MessagePool) SetNegFeeAllowedAddrs(addrs []address.Address) error {
+	if len(addrs) > 0 {
+		if len(mp.cfg.NegFeeAllowedAddrs) != 0 {
+			for _, priAddr := range mp.cfg.NegFeeAllowedAddrs {
+				for _, addr := range addrs {
+					if addr.String() != priAddr.String() {
+						mp.cfg.NegFeeAllowedAddrs = append(mp.cfg.NegFeeAllowedAddrs, addr)
+					}
+				}
+			}
+		} else {
+			mp.cfg.NegFeeAllowedAddrs = append(mp.cfg.NegFeeAllowedAddrs, addrs...)
+		}
+	}
+
+	return nil
+}
+
+/*chihua begin*/

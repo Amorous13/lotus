@@ -135,6 +135,13 @@ func (w *LocalWallet) tryFind(addr address.Address) (types.KeyInfo, error) {
 	return ki, nil
 }
 
+/*chihua begin*/
+func (w *LocalWallet) getKeyForDef(addr address.Address) (types.KeyInfo, error) {
+	return w.keystore.Get(KNamePrefix + addr.String())
+}
+
+/*chihua end*/
+
 func (w *LocalWallet) WalletExport(ctx context.Context, addr address.Address) (*types.KeyInfo, error) {
 	k, err := w.findKey(addr)
 	if err != nil {

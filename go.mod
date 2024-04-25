@@ -1,6 +1,6 @@
 module github.com/filecoin-project/lotus
 
-go 1.21
+go 1.20
 
 retract v1.14.0 // Accidentally force-pushed tag, use v1.14.1+ instead.
 
@@ -29,7 +29,7 @@ require (
 	github.com/elastic/go-sysinfo v1.7.0
 	github.com/elastic/gosigar v0.14.2
 	github.com/etclabscore/go-openrpc-reflect v0.0.36
-	github.com/fatih/color v1.15.0
+	github.com/fatih/color v1.16.0
 	github.com/filecoin-project/dagstore v0.5.2
 	github.com/filecoin-project/filecoin-ffi v0.30.4-0.20220519234331-bfd1f5f9fe38
 	github.com/filecoin-project/go-address v1.1.0
@@ -67,18 +67,20 @@ require (
 	github.com/georgysavva/scany/v2 v2.0.0
 	github.com/go-openapi/spec v0.19.11
 	github.com/golang/mock v1.6.0
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.1
 	github.com/gregdhill/go-openrpc v0.0.0-20220114144539-ae6f44720487
 	github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026
 	github.com/hannahhoward/go-pubsub v0.0.0-20200423002714-8d62886cc36e
-	github.com/hashicorp/go-hclog v1.3.0
+	github.com/hashicorp/go-hclog v1.6.2
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/golang-lru/arc/v2 v2.0.5
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/hashicorp/raft v1.3.10
 	github.com/hashicorp/raft-boltdb v0.0.0-20171010151810-6e5ba93211ea
+	github.com/hashicorp/vault/api v1.13.0
+	github.com/hashicorp/vault/sdk v0.12.0
 	github.com/icza/backscanner v0.0.0-20210726202459-ac2ffc679f94
 	github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab
 	github.com/ipfs/bbloom v0.0.4
@@ -95,6 +97,7 @@ require (
 	github.com/ipfs/go-ipfs-blocksutil v0.0.1
 	github.com/ipfs/go-ipld-cbor v0.1.0
 	github.com/ipfs/go-ipld-format v0.6.0
+	github.com/ipfs/go-log v1.0.5
 	github.com/ipfs/go-log/v2 v2.5.1
 	github.com/ipfs/go-metrics-interface v0.0.1
 	github.com/ipfs/go-metrics-prometheus v0.0.2
@@ -161,12 +164,12 @@ require (
 	go.uber.org/fx v1.20.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
-	golang.org/x/crypto v0.19.0
+	golang.org/x/crypto v0.21.0
 	golang.org/x/exp v0.0.0-20240213143201-ec583247a57a
-	golang.org/x/net v0.21.0
+	golang.org/x/net v0.22.0
 	golang.org/x/sync v0.6.0
-	golang.org/x/sys v0.17.0
-	golang.org/x/term v0.17.0
+	golang.org/x/sys v0.18.0
+	golang.org/x/term v0.18.0
 	golang.org/x/time v0.5.0
 	golang.org/x/tools v0.18.0
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028
@@ -182,12 +185,13 @@ require (
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/akavel/rsrc v0.8.0 // indirect
 	github.com/alecthomas/units v0.0.0-20231202071711-9a357b53e9c9 // indirect
-	github.com/armon/go-metrics v0.3.9 // indirect
+	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/benbjohnson/clock v1.3.5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/boltdb/bolt v1.3.1 // indirect
+	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cilium/ebpf v0.9.1 // indirect
@@ -195,7 +199,7 @@ require (
 	github.com/crackcomm/go-gitignore v0.0.0-20231225121904-e25f5bc08668 // indirect
 	github.com/cskr/pubsub v1.0.2 // indirect
 	github.com/daaku/go.zipexe v1.0.2 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/davidlazar/go-crypto v0.0.0-20200604182044-b73af7476f6c // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/dgraph-io/ristretto v0.1.1 // indirect
@@ -211,6 +215,7 @@ require (
 	github.com/flynn/noise v1.1.0 // indirect
 	github.com/francoispqt/gojay v1.2.13 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
+	github.com/go-jose/go-jose/v4 v4.0.1 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
@@ -224,16 +229,23 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/glog v1.1.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/gopacket v1.1.19 // indirect
 	github.com/google/pprof v0.0.0-20240207164012-fb44976bdcd5 // indirect
 	github.com/hannahhoward/cbor-gen-for v0.0.0-20230214144701-5d17c9d5243c // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-msgpack v0.5.5 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.1 // indirect
+	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
+	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.8 // indirect
+	github.com/hashicorp/go-secure-stdlib/strutil v0.1.2 // indirect
+	github.com/hashicorp/go-sockaddr v1.0.6 // indirect
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
+	github.com/hashicorp/hcl v1.0.1-vault-5 // indirect
 	github.com/huin/goupnp v1.3.0 // indirect
 	github.com/iancoleman/orderedmap v0.1.0 // indirect
 	github.com/ipfs/go-bitfield v1.1.0 // indirect
@@ -247,7 +259,6 @@ require (
 	github.com/ipfs/go-ipfs-util v0.0.3 // indirect
 	github.com/ipfs/go-ipld-legacy v0.2.1 // indirect
 	github.com/ipfs/go-libipfs v0.7.0 // indirect
-	github.com/ipfs/go-log v1.0.5 // indirect
 	github.com/ipfs/go-merkledag v0.11.0 // indirect
 	github.com/ipfs/go-peertaskqueue v0.8.1 // indirect
 	github.com/ipfs/go-verifcid v0.0.2 // indirect
@@ -287,6 +298,7 @@ require (
 	github.com/mikioh/tcpinfo v0.0.0-20190314235526-30a79bb1804b // indirect
 	github.com/mikioh/tcpopt v0.0.0-20190314235656-172688c1accc // indirect
 	github.com/minio/sha256-simd v1.0.1 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mr-tron/base58 v1.2.0 // indirect
 	github.com/multiformats/go-base36 v0.2.0 // indirect
 	github.com/multiformats/go-multiaddr-fmt v0.1.0 // indirect
@@ -297,7 +309,8 @@ require (
 	github.com/opencontainers/runtime-spec v1.2.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/petar/GoLLRB v0.0.0-20210522233825-ae3b015fd3e9 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/prometheus/client_model v0.6.0 // indirect
 	github.com/prometheus/common v0.47.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
@@ -308,8 +321,9 @@ require (
 	github.com/rivo/uniseg v0.1.0 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/shirou/gopsutil v2.18.12+incompatible // indirect
-	github.com/sirupsen/logrus v1.9.2 // indirect
+	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/tidwall/gjson v1.14.4 // indirect
 	github.com/twmb/murmur3 v1.1.6 // indirect
@@ -336,7 +350,7 @@ require (
 	gonum.org/v1/gonum v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240108191215-35c7eff3a6b1 // indirect
 	google.golang.org/grpc v1.60.1 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v0.0.0-20181124034731-591f970eefbb // indirect
@@ -348,3 +362,5 @@ replace github.com/filecoin-project/filecoin-ffi => ./extern/filecoin-ffi
 replace github.com/filecoin-project/test-vectors => ./extern/test-vectors
 
 replace github.com/triplewz/poseidon => github.com/magik6k/poseidon v0.0.0-neptune
+
+replace github.com/whyrusleeping/ledger-filecoin-go => ./extern/ipfsunion_ledger_filecoin_go

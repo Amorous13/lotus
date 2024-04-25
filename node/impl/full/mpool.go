@@ -3,6 +3,7 @@ package full
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/ipfs/go-cid"
@@ -293,3 +294,52 @@ func (a *MpoolAPI) MpoolGetNonce(ctx context.Context, addr address.Address) (uin
 func (a *MpoolAPI) MpoolSub(ctx context.Context) (<-chan api.MpoolUpdate, error) {
 	return a.Mpool.Updates(ctx)
 }
+
+/*chihua begin*/
+func (a *MpoolAPI) MpoolSetBlockPackingPriAddrs(ctx context.Context, forcePriPacking bool, isOnlyWhiteList bool, flag uint8, addrs []address.Address) error {
+	return a.Mpool.AddPendingPriAddr(forcePriPacking, isOnlyWhiteList, flag, addrs)
+}
+
+func (a *MpoolAPI) MpoolSetGasFeeCap(ctx context.Context, maxFreeCap int64, freeCapOverRadio float64) error {
+	return a.Mpool.SetGasFeeGap(ctx, maxFreeCap, freeCapOverRadio)
+}
+
+func (a *MpoolAPI) MpoolGetGasFeeCap(ctx context.Context) ([]byte, error) {
+	maxFeeCap, feeCapOverRadio, err := a.Mpool.GetGasFeeGap()
+	if err != nil {
+		return nil, err
+	}
+
+	gasFeeCapInfo := map[string]interface{}{"MaxFeeCap": fmt.Sprintf("%d attoFIL", maxFeeCap), "FeeCapOverRatio": feeCapOverRadio}
+
+	return json.Marshal(gasFeeCapInfo)
+}
+
+func (a *MpoolAPI) MpoolSetGasLimit(ctx context.Context, gasLimitWhiteList bool, gasLimitRadio float64) error {
+	return a.Mpool.SetGasLimit(ctx, gasLimitWhiteList, gasLimitRadio)
+}
+
+func (a *MpoolAPI) MpoolGetGasLimit(ctx context.Context) ([]byte, error) {
+	gasLimitWhiteList, gasLimitRatio := a.Mpool.GetGasLimit()
+	gasFeeCapInfo := map[string]interface{}{"GasLimitWhiteList": gasLimitWhiteList, "GasLimitRatio": gasLimitRatio}
+
+	return json.Marshal(gasFeeCapInfo)
+}
+
+func (a *MpoolAPI) MpoolSetGasLimitOverestimation(ctx context.Context, param map[string]float64) error {
+	return a.Mpool.SetGasLimitOverestimation(ctx, param)
+}
+
+func (a *MpoolAPI) MpoolGetGasLimitOverestimation(ctx context.Context) (map[string]float64, error) {
+	return a.Mpool.GetGasLimitOverestimation()
+}
+
+func (a *MpoolAPI) MpoolSetNegFeeAllowedAddrs(ctx context.Context, addrs []address.Address) error {
+	return a.Mpool.SetNegFeeAllowedAddrs(addrs)
+}
+
+func (a *MpoolAPI) MpoolGetNextNonce(ctx context.Context, addr address.Address) (uint64, error) {
+	return a.MessageSigner.NextNonce(ctx, addr)
+}
+
+/*chihua end*/
