@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/filecoin-project/lotus/lib/chihua/chain"
 	"github.com/filecoin-project/lotus/lib/chihua/util"
 
 	"github.com/google/uuid"
@@ -137,8 +138,10 @@ func (a *MpoolAPI) MpoolClear(ctx context.Context, local bool) error {
 func (m *MpoolModule) MpoolPush(ctx context.Context, smsg *types.SignedMessage) (cid.Cid, error) {
 	/*chihua begin*/
 	c, err := m.Mpool.Push(ctx, smsg, true)
-	if err != nil {
-		log.Errorf("MpoolPush failed %v ", err)
+	if err == nil {
+		chain.InsertMessageAsync(smsg)
+	} else {
+		log.Errorf("MpoolPush failed %v wont InsertMessageAsync", err)
 	}
 	return c, err
 	/*chihua end*/
