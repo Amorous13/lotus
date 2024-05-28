@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/filecoin-project/lotus/lib/chihua/chain"
-	"github.com/filecoin-project/lotus/lib/chihua/util"
 
 	"github.com/google/uuid"
 	"github.com/ipfs/go-cid"
@@ -136,15 +134,7 @@ func (a *MpoolAPI) MpoolClear(ctx context.Context, local bool) error {
 }
 
 func (m *MpoolModule) MpoolPush(ctx context.Context, smsg *types.SignedMessage) (cid.Cid, error) {
-	/*chihua begin*/
-	c, err := m.Mpool.Push(ctx, smsg, true)
-	if err == nil {
-		chain.InsertMessageAsync(smsg)
-	} else {
-		log.Errorf("MpoolPush failed %v wont InsertMessageAsync", err)
-	}
-	return c, err
-	/*chihua end*/
+	return m.Mpool.Push(ctx, smsg, true)
 }
 
 func (a *MpoolAPI) MpoolPushUntrusted(ctx context.Context, smsg *types.SignedMessage) (cid.Cid, error) {
@@ -206,15 +196,6 @@ func (a *MpoolAPI) MpoolPushMessage(ctx context.Context, msg *types.Message, spe
 	if err != nil {
 		return nil, xerrors.Errorf("GasEstimateMessageGas error: %w", err)
 	}
-
-	/*chihua add*/
-	mpConfig := a.Mpool.GetConfig()
-	if !util.IsEqual(mpConfig.FeeCapOverRatio, 0.00) {
-		feeCapOver := types.BigMul(msg.GasFeeCap, types.NewInt(uint64(mpConfig.FeeCapOverRatio*(1<<8))))
-		msg.GasFeeCap = types.BigDiv(feeCapOver, types.NewInt(1<<8))
-		msg.GasFeeCap = big.Min(msg.GasFeeCap, mpConfig.MaxFeeCap)
-	}
-	/*chihua end*/
 
 	if msg.GasPremium.GreaterThan(msg.GasFeeCap) {
 		inJson, _ := json.Marshal(inMsg)
